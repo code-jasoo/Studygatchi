@@ -177,3 +177,24 @@
   margin-top: 0.25rem;
   padding: 0.25rem;
 }
+
+.editmodal-form {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 8px 10px;
+  width: 320px;
+  margin: 0 auto;
+}
+
+.editmodal-field {
+  display: contents;
+}
+
+.editmodal-field label {
+  text-align: right;
+}
+
+.editmodal-field input {
+  width: 100%;
+  box-sizing: border-box;
+}

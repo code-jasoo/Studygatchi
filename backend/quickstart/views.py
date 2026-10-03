@@ -46,3 +46,25 @@ def get_task(request: Request) -> Response:
 
     except StudyUser.DoesNotExist:
         return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def edit_task(request: Request, pk: int) -> Response:
+    # Attempt to edit the task
+    try:
+        # Query the task with the primary key but also the foreign key
+        task = Task.objects.get(pk=pk, user=request.user)
+    except Task.DoesNotExist:
+        return Response({"error": "Task does not exist for authenticated user"}, status=status.HTTP_404_NOT_FOUND)
+
+    # Create serializer with the current task object, but update with the given request data. Use partial to tell django
+    # that it can accept partial data/params.
+    serializer = TaskSerializer(task, data=request.data, partial=True)
+
+    # Validate the data is correct
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # Ship it.
+    serializer.save()
+    return Response(serializer.data, status=status.HTTP_200_OK)

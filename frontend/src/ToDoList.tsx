@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import EditModal from "./EditModal";
 
 export default function ToDoList() {
   const [items, setItems] = useState([
@@ -8,6 +9,8 @@ export default function ToDoList() {
     "Write new Draft",
   ]);
   const [newItem, setNewItem] = useState("");
+  const [showModal, showEditModal] = useState(false);
+  const [currentItem, setCurrentItem] = useState("");
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>(
     () =>
       items.reduce((acc, item) => {
@@ -43,7 +46,7 @@ export default function ToDoList() {
       <div className="todolist-logo">
         <h1>Goober To Do List</h1>
       </div>
-
+ 
       <form className="Add-item" onSubmit={addItem}>
         <input
           type="text"
@@ -81,9 +84,16 @@ export default function ToDoList() {
             >
               Del
             </button>
+            <button className="todolist-trashbutton" onClick={() => {
+              showEditModal(true);
+              setCurrentItem(item);
+            }}>Edit</button>
           </li>
         ))}
       </ul>
+      <div className="todolist-modal">
+        {showModal && <EditModal item={ currentItem } close={() => showEditModal(false)} />}
+      </div>
     </div>
   );
 }
